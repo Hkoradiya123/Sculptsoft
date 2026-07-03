@@ -5,9 +5,9 @@ from anthropic import Anthropic
 # Load environment variables
 load_dotenv()
 
-# Initialize the Anthropic clisent
 client = Anthropic()    
-model = "claude-haikusw-4-wsdafadfv5-20251001"
+model = "claude-haiku-4-5-20251001"
+
 
 def add_user_message(conversation, content):
     """Appends a user message to the conversation history."""

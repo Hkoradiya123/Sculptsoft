@@ -15,6 +15,7 @@ env/
 **/env/
 **/venv/
 **/.venv/
+2026-06-29-mcp-tools\.venv
 
 # ── Environment & secrets ─────────────────────────────────────────────────────
 .env
@@ -89,4 +90,16 @@ opencode.json
 .mcp.json
 *.mcp.json
 session-*.md
+/graphify-out
 *.lnk
+
+.venv
+2026-06-29-mcp-tools\.venv
+/freellmapi.bat - Shortcut.lnk
+
+# ── Test / Practice folders ──────────────────────────────────────────────────
+2026-06-29-mcp-tools-openai/
+2026-06-29-mcp-tools/
+2026-07-01-TEST-OPENAI-API/
+2026-07-02-Claude-Code-in-Action/
+list_anthropic_models_scratch.py
