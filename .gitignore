@@ -97,9 +97,18 @@ session-*.md
 2026-06-29-mcp-tools\.venv
 /freellmapi.bat - Shortcut.lnk
 
-# ── Test / Practice folders ──────────────────────────────────────────────────
-2026-06-29-mcp-tools-openai/
-2026-06-29-mcp-tools/
-2026-07-01-TEST-OPENAI-API/
-2026-07-02-Claude-Code-in-Action/
-list_anthropic_models_scratch.py
+# ── Node / JS build artifacts ─────────────────────────────────────────────────
+**/node_modules/
+**/.next/
+**/tsconfig.tsbuildinfo
+**/src/generated/
+
+# ── macOS metadata ────────────────────────────────────────────────────────────
+**/__MACOSX/
+**/._*
+
+# ── Archives ──────────────────────────────────────────────────────────────────
+*.zip
+*.tar.gz
+*.tgz
+
