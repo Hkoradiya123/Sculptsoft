@@ -1,65 +1,137 @@
-
 from dotenv import load_dotenv
 load_dotenv()
-from openai import OpenAI
+
 import streamlit as st
+from openai import OpenAI
+from database.db import Conversation
+from database.crud import (
+    get_db,
+    get_all_conversations,
+    create_conversation,
+    update_conversation_title,
+    get_messages,
+    save_message,
+)
 
 client = OpenAI()
 model = "gpt-5.5"
 
 instructions = """
 You are a helpful assistant. Please provide clear and concise responses to the user's queries.
-you only respond in plain/text format, without any markdown or code blocks.
-you should not provide any explanations or additional information unless explicitly asked by the user.
+You should not provide any explanations or additional information unless explicitly asked by the user.
 """
 
+st.set_page_config(
+    page_title="AI Chatbot",
+    page_icon="💀",
+    layout="centered",
+)
 
-def add_user_message(messages, text):
-    messages.append({"role": "user", "content": text})
-
-
-def add_assistant_message(messages, text):
-    messages.append({"role": "assistant", "content": text})
-
-
-def chat_stream(messages: list):
-    return client.responses.create(
-        model=model,
-        input=messages,
-        instructions=instructions,
-        stream=True,
-    )
+# One DB session for the entire script run
+db = get_db()
 
 
-# ── Streamlit UI ──────────────────────────────────────────────────────────────
+# ── Helpers ───────────────────────────────────────────────────────────────────
+
+def load_conversation(conversation_id: int):
+    msgs = get_messages(db, conversation_id)
+    st.session_state.conversation_id = conversation_id
+    st.session_state.messages = [{"role": m.role, "content": m.content} for m in msgs]
+    st.query_params["convo"] = str(conversation_id)
+
+
+def new_chat():
+    st.session_state.conversation_id = None
+    st.session_state.messages = []
+    st.query_params.clear()
+
+
+# ── Bootstrap session ─────────────────────────────────────────────────────────
+
+if "conversation_id" not in st.session_state:
+    convo_param = st.query_params.get("convo")
+    if convo_param and convo_param.isdigit():
+        convo_id = int(convo_param)
+        convo = db.query(Conversation).filter_by(id=convo_id).first()
+        if convo:
+            load_conversation(convo_id)
+        else:
+            new_chat()
+    else:
+        new_chat()
+
+
+# ── Sidebar ───────────────────────────────────────────────────────────────────
+
+with st.sidebar:
+    st.title("Conversations")
+
+    if st.button("＋ New Chat", use_container_width=True):
+        new_chat()
+        st.rerun()
+
+    st.divider()
+
+    for convo in get_all_conversations(db):
+        is_active = convo.id == st.session_state.conversation_id
+        if st.button(
+            convo.title,
+            key=f"convo_{convo.id}",
+            use_container_width=True,
+            type="primary" if is_active else "secondary",
+        ):
+            load_conversation(convo.id)
+            st.rerun()
+
+
+# ── Main chat UI ──────────────────────────────────────────────────────────────
 
 st.title("AI Chatbot")
 
-if "messages" not in st.session_state:
-    st.session_state.messages = []
-    add_assistant_message(st.session_state.messages, "Hello, How can I assist you today?")
-
-# Render conversation history
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
-        st.write(msg["content"])
+        st.markdown(msg["content"])
 
-# Input box at the bottom
-user_input = st.chat_input("Type your message…")
+prompt = st.chat_input("Type your message...")
 
-if user_input:
-    add_user_message(st.session_state.messages, user_input)
+if prompt:
+    # Create conversation on first message
+    if st.session_state.conversation_id is None:
+        convo = create_conversation(db, title=prompt[:40].strip())
+        st.session_state.conversation_id = convo.id
+    else:
+        convo = db.query(Conversation).filter_by(id=st.session_state.conversation_id).first()
+        if convo and convo.title == "New Chat":
+            update_conversation_title(db, st.session_state.conversation_id, prompt[:40].strip())
+
+    save_message(db, st.session_state.conversation_id, "user", prompt)
+    st.session_state.messages.append({"role": "user", "content": prompt})
+
     with st.chat_message("user"):
-        st.write(user_input)
+        st.markdown(prompt)
 
     with st.chat_message("assistant"):
         placeholder = st.empty()
         full_response = ""
-        stream = chat_stream(st.session_state.messages)
+
+        stream = client.responses.create(
+            model=model,
+            input=st.session_state.messages,
+            instructions=instructions,
+            stream=True,
+        )
+
         for event in stream:
             if event.type == "response.output_text.delta":
                 full_response += event.delta
-                placeholder.write(full_response)
-        placeholder.write(full_response)
+                placeholder.markdown(full_response)
 
-    add_assistant_message(st.session_state.messages, full_response)
+        placeholder.markdown(full_response)
+
+    save_message(db, st.session_state.conversation_id, "assistant", full_response)
+    st.session_state.messages.append({"role": "assistant", "content": full_response})
+
+    db.close()
+    st.rerun()
+
+db.close()
