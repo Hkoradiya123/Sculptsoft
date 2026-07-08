@@ -27,11 +27,10 @@ st.set_page_config(
     layout="centered",
 )
 
-# One DB session for the entire script run
+# db
 db = get_db()
 
 
-# ── Helpers ───────────────────────────────────────────────────────────────────
 
 def load_conversation(conversation_id: int):
     msgs = get_messages(db, conversation_id)
@@ -46,7 +45,7 @@ def new_chat():
     st.query_params.clear()
 
 
-# ── Bootstrap session ─────────────────────────────────────────────────────────
+#  Bootstrap session 
 
 if "conversation_id" not in st.session_state:
     convo_param = st.query_params.get("convo")
@@ -61,17 +60,28 @@ if "conversation_id" not in st.session_state:
         new_chat()
 
 
-# ── Sidebar ───────────────────────────────────────────────────────────────────
+#  Sidebar 
 
 with st.sidebar:
-    st.title("Conversations")
-
+    
+    st.markdown("<h1 align='center'>😎 AI Chatbot</h1>", unsafe_allow_html=True)
+    
+    st.divider()
+    st.subheader("New chat")
     if st.button("＋ New Chat", use_container_width=True):
         new_chat()
         st.rerun()
 
+    model = st.selectbox(
+        "Select Model",
+        ["gpt-5.5", "gpt-4.1", "gpt-4o", "gpt-4o-mini"],
+        index=0,
+    )
+ 
     st.divider()
 
+    st.subheader("Conversations")
+    
     for convo in get_all_conversations(db):
         is_active = convo.id == st.session_state.conversation_id
         if st.button(
@@ -84,16 +94,19 @@ with st.sidebar:
             st.rerun()
 
 
-# ── Main chat UI ──────────────────────────────────────────────────────────────
+#  Main chat UI 
 
-st.title("AI Chatbot")
+st.subheader("Ask ai")
 
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.markdown(msg["content"])
 
-prompt = st.chat_input("Type your message...")
+   
 
+prompt = st.chat_input("Type your message...")
+    
+    
 if prompt:
     # Create conversation on first message
     if st.session_state.conversation_id is None:
@@ -131,7 +144,7 @@ if prompt:
     save_message(db, st.session_state.conversation_id, "assistant", full_response)
     st.session_state.messages.append({"role": "assistant", "content": full_response})
 
-    db.close()
+    db.close
     st.rerun()
 
 db.close()
