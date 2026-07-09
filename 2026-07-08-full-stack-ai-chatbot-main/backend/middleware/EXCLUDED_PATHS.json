@@ -1,0 +1,10 @@
+{
+    "EXCLUDED_PATHS": [
+        "/auth/login",
+        "/auth/register",
+        "/docs",
+        "/redoc",
+        "/openapi.json",
+        "/health"
+    ]
+}

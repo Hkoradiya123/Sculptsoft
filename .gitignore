@@ -116,3 +116,8 @@ session-*.md
 .claude/skills/developing-with-streamlit
 text.py
 /2026-07-08-full-stack-ai-chatbot/.env
+2026-07-08-full-stack-ai-chatbot/
+docs_preview.png
+.gitignore
+image.png
+
