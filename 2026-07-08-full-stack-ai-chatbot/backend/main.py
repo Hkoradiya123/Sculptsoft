@@ -5,6 +5,10 @@ from starlette.middleware.base import BaseHTTPMiddleware
 from core.exceptions import AppException, app_exception_handler
 from middleware.auth import AuthMiddleware
 from api import auth, users, conversations, messages, chat
+import models  # noqa: F401 — registers all ORM classes with shared Base
+from database.base import Base, engine
+
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="ai-chatbot-backend",

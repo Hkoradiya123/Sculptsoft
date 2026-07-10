@@ -1,7 +1,8 @@
  {
     "EXCLUDED_PATHS" : [
-        "/login",
-        "/register",
+        "/",
+        "/auth/login",
+        "/auth/register",
         "/docs",
         "/redoc",
         "/openapi.json",

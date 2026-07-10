@@ -1,8 +1,8 @@
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
-from sqlalchemy.ext.declarative import declarative_base
 
-Base = declarative_base()
+from database.base import Base
+
 
 class User(Base):
     __tablename__ = "users"
@@ -13,4 +13,3 @@ class User(Base):
     role = Column(String, default="user")
 
     conversations = relationship("Conversation", back_populates="user")
-    

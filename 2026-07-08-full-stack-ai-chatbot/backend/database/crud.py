@@ -28,17 +28,17 @@ def get_conversations(db: Session, user_id: int) -> list[Conversation]:
 def get_conversation(db: Session, conversation_id: int) -> Conversation | None:
     return db.query(Conversation).filter(Conversation.id == conversation_id).first()
 
-def create_conversation(db: Session, user_id: int, title: str = "New Chat") -> Conversation:
-    convo = Conversation(user_id=user_id, title=title)
-    db.add(convo)
+def create_conversation(db: Session, user_id: int, title: str) -> Conversation:
+    conversation = Conversation(user_id=user_id, title=title)
+    db.add(conversation)
     db.commit()
-    db.refresh(convo)
-    return convo
+    db.refresh(conversation)
+    return conversation
 
 def delete_conversation(db: Session, conversation_id: int) -> None:
-    convo = db.query(Conversation).filter(Conversation.id == conversation_id).first()
-    if convo:
-        db.delete(convo)
+    conversation = db.query(Conversation).filter(Conversation.id == conversation_id).first()
+    if conversation:
+        db.delete(conversation)
         db.commit()
 
 

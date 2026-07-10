@@ -1,5 +1,5 @@
-import user.User as User
-import conversation.Conversation as Conversation
-import message.Message as Message
+from models.user import User
+from models.conversation import Conversation
+from models.message import Message
 
 __all__ = ["User", "Conversation", "Message"]

@@ -1,9 +1,9 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
-from sqlalchemy.ext.declarative import declarative_base
 from datetime import datetime
 
-Base = declarative_base()
+from database.base import Base
+
 
 class Message(Base):
     __tablename__ = "messages"
@@ -15,4 +15,3 @@ class Message(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
     conversation = relationship("Conversation", back_populates="messages")
-    
