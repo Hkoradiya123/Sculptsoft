@@ -1,0 +1,13 @@
+{
+    "title": "student",
+    "description": "A student",
+    "type": "object",
+    "properties": {
+        "name": "string",
+        "age": "integer",
+        "gender": "string"
+    },
+    "required": [
+        "name"
+    ]
+}

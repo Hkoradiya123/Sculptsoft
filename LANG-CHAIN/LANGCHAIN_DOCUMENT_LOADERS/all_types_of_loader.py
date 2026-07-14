@@ -1,0 +1,1 @@
+# all descripton of all types of loaders are here :- https://docs.langchain.com/oss/python/integrations/document_loaders#pdfs

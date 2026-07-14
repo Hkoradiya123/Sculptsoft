@@ -121,3 +121,5 @@ docs_preview.png
 .gitignore
 image.png
 
+/LANG-CHAIN/.env
+/LANG-CHAIN/LANGCHAIN_CHAINS/.env
