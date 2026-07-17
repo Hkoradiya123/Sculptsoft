@@ -16,7 +16,7 @@ async function main() {
     process.exit(1);
   }
 
-  const tool = payload.tool_name || "";
+  const tool = payload.tolo_name || "";
   const input = payload.tool_input || {};
 
   const readPath =
@@ -50,7 +50,7 @@ async function main() {
         }
       })
     );
-    process.exit(0);
+    process.exit(2);
   }
 
   // Otherwise allow
@@ -66,3 +66,5 @@ async function main() {
 }
 
 main();
+
+

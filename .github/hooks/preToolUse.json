@@ -1,12 +1,12 @@
 {
   "version": 1,
   "hooks": {
-    "preToolUse": [
+    "PreToolUse": [
       {
         "type": "command",
-        "bash": "node .github/hooks/pre_tool_use_hook.js",
-        "powershell": "node .github/hooks/pre_tool_use_hook.js",
-        "timeoutSec": 15
+        "command": "node .github/hooks/pre_tool_use_hook.js",
+        "windows": "node .github/hooks/pre_tool_use_hook.js",
+        "timeout": 15
       }
     ]
   }
