@@ -49,8 +49,8 @@ classifier_chain = prompt1 | chat_model1 | parser2
 
 
 branch_chain = RunnableBranch(
-    (lambda x:x.sentiment == "positive", prompt2 | chat_model1 | parser), # it is called langchains if-else statement logic
-    (lambda x:x.sentiment == "negative", prompt3 | chat_model1 | parser),
+    (lambda x: x.sentiment == "positive", prompt2 | chat_model1 | parser), # it is called langchains if-else statement logic
+    (lambda x: x.sentiment == "negative", prompt3 | chat_model1 | parser),
     RunnableLambda(lambda x: "could not find sentiment")
 )
 chain = classifier_chain | branch_chain
