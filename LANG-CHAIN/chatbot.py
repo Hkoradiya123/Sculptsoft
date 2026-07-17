@@ -2,11 +2,13 @@ from langchain_huggingface import ChatHuggingFace, HuggingFaceEndpoint
 from dotenv import load_dotenv
 import halo
 load_dotenv()
+import os
 
 llm = HuggingFaceEndpoint(
     repo_id="deepseek-ai/DeepSeek-V3.2",
     task="text-generation",
     temperature=1.7,
+    huggingfacehub_api_token=os.environ.get("HuggingFace_API_KEY")
 )
 
 chat_model = ChatHuggingFace(llm=llm)
