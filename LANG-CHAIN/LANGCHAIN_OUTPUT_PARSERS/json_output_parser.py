@@ -4,6 +4,7 @@ from langchain_huggingface import ChatHuggingFace, HuggingFaceEndpoint
 import dotenv
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import JsonOutputParser  
+import os
 
 dotenv.load_dotenv()
 
@@ -11,6 +12,7 @@ llm = HuggingFaceEndpoint(
     repo_id="meta-llama/Llama-3.1-8B-Instruct",
     task="text-generation",
     temperature=0.4,
+    huggingfacehub_api_token=os.environ.get("HuggingFace_API_KEY")
 )
 
 model = ChatHuggingFace(llm=llm)

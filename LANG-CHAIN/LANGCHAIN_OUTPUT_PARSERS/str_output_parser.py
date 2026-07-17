@@ -4,6 +4,8 @@ from langchain_huggingface import ChatHuggingFace, HuggingFaceEndpoint
 import dotenv
 from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
+from langchain_openai import OpenAI , ChatOpenAI
+import os
 
 dotenv.load_dotenv()
 
@@ -11,10 +13,15 @@ llm = HuggingFaceEndpoint(
     repo_id="meta-llama/Llama-3.1-8B-Instruct",
     task="text-generation",
     temperature=0.4,
+    huggingfacehub_api_token=os.environ.get("HuggingFace_API_KEY")
 )
 
-model = ChatHuggingFace(llm=llm)
-
+model = ChatOpenAI(
+    model="gpt-oss-120b", 
+    base_url="http://127.0.0.1:3001/v1",
+    temperature=0.4, 
+    api_key=os.environ.get("FREELLM_API_KEY")
+)
 # 1st prompt  -> detailed report
 
 tempelate1 = PromptTemplate(
